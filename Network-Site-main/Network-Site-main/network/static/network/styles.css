@@ -1,0 +1,35 @@
+.border{
+    margin: 10px;
+    padding: 20px;
+}
+
+.date{
+    color: rgb(151, 151, 151);
+    font-size: 13px;
+}
+
+.content{
+    font-size: 15px;
+    color: red;
+}
+
+p{
+    margin: 0%;
+}
+.following > p{
+    font-size: 20px;
+    float: left;    
+}
+.follow_button{
+    float: right;
+}
+
+/* index.html */
+.bi-heart-fill {
+    font-size: 25px;
+    color: red;
+
+}
+.bi-heart{
+    font-size: 25px;       
+}

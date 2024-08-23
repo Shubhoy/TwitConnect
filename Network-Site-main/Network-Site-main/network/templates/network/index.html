@@ -1,0 +1,82 @@
+{% extends "network/layout.html" %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let like = document.querySelectorAll('i');
+        for(let i = 0; i < like.length; i++){
+            like[i].addEventListener('click',function(){
+                if(this.classList.contains('bi-heart-fill')){
+                    const post_id = this.dataset.post_id
+                    const user_like = this.dataset.user_like
+                    this.classList.remove('bi-heart-fill');
+                    this.classList.add('bi-heart');
+                    fetch('/dislike',{
+                        method : 'POST',
+                        body : JSON.stringify({
+                            post_id:post_id,
+                            user_like:user_like
+                        })
+                    })
+                }else{
+                    const post_id = this.dataset.post_id
+                    const user_like = this.dataset.user_like
+                    this.classList.remove('bi-heart');
+                    this.classList.add('bi-heart-fill');
+                    fetch('/like',{
+                        method : 'POST',
+                        body : JSON.stringify({
+                            post_id:post_id,
+                            user_like:user_like
+                        })
+                    })
+                }
+            })
+        }
+    });
+</script>
+{% endblock %}
+
+{% block body %}
+{% if user.is_authenticated %}
+    <div class="border">
+        <h4>New Post</h4>
+        <form action="{% url 'newpost' %}" method="POST">
+            {% csrf_token %}
+            <textarea name="content"  class="form-control"></textarea>
+            <input type="submit" value="Post" class="btn btn-primary">
+        </form>
+    </div>
+{% endif %}
+{% for post in currentpage %}
+    <div class = "border">
+        <a href="{% url 'profile' post.user.id %}"><h5>{{post.user.username}}</h5></a>
+        <p class="content">{{post.content}}</p>
+        <p class="date">{{post.date}}</p>
+        {% if user.is_authenticated %}
+                {% if post in post_like %}
+                    <i class="bi bi-heart-fill" data-post_id = {{post.id}} data-user_like="{{user}}"></i>
+                {% else %}
+                    <i class="bi bi-heart" data-post_id = {{post.id}} data-user_like="{{user}}"></i>
+                {% endif %}
+        {% endif %}
+        {% if user == post.user %}
+            <form action="{% url 'editing' post.id %}" >
+                <input type="submit" class="btn btn-warning" value="Edit">
+            </form>
+        {% endif %}
+
+    </div>
+{% endfor %}
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination d-flex justify-content-center">
+        {% if currentpage.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{currentpage.previous_page_number}}">Previous</a></li>
+        {% endif %}
+        {% if currentpage.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{currentpage.next_page_number}}">Next</a></li>
+        {% endif %}
+    </ul>
+  </nav>
+{% endblock %}

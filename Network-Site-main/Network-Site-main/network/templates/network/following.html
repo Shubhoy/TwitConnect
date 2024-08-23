@@ -1,0 +1,28 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+{% if user.is_authenticated %}
+{% for post in currentpage %}
+    <div class = "border">
+        <a href="{% url 'profile' post.user.id %}"><h5>{{post.user.username}}</h5></a>
+        <p class="content">{{post.content}}</p>
+        <p class="date">{{post.date}}</p>
+        {% if user == post.user %}
+            <button type="submit" class="btn btn-warning">Edit</button>
+        {% endif %}
+    </div>
+{% endfor %}
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination d-flex justify-content-center">
+        {% if currentpage.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{currentpage.previous_page_number}}">Previous</a></li>
+        {% endif %}
+        {% if currentpage.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{currentpage.next_page_number}}">Next</a></li>
+        {% endif %}
+    </ul>
+  </nav>
+
+{% endif %}
+{% endblock %}
